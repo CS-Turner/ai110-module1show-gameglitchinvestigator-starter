@@ -33,7 +33,7 @@ Document at least 3 bugs you found. Add rows as needed.
 
 - Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)? I used copilot in chat, and claude chats in a project. 
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result). Noting that the "Go Higher! and "Go lower!" messages were backward let me condense the list of bugs noticed. 
-- Give one example of an AI suggestion you did not accept as written (including what the AI suggested, why you rejected or changed it, and how you verified your version). It does not have to be a suggestion that was wrong: over-engineered, out of scope, harder to read, or a poor fit for this codebase all count. Copilot noticed that the mismatch bug is script-order problem, not a random state corruption bug: on even attempts, the secret is converted to a string before comparing. So the score is not updated properly. I verified this by starting a new game and testing. 
+- Give one example of an AI suggestion you did not accept as written (including what the AI suggested, why you rejected or changed it, and how you verified your version). It does not have to be a suggestion that was wrong: over-engineered, out of scope, harder to read, or a poor fit for this codebase all count. Copilot noticed that the mismatch bug is script-order problem, not a random state corruption bug. On probing, I realized the issue was with updating the score in the Debug Info: on even attempts, the secret is converted to a string before comparing. So the score is not updated properly. The worked with Copilot in multistep prompting to address and fix the issue. Finally, I verified the fissue and fixed it by starting a new game and testing.
 
 ---
 
