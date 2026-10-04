@@ -1,6 +1,6 @@
 ============================= test session starts ==============================
 platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0
-rootdir: /Users/charitysturner/codepath/bytebites_tinker_activity/ai110-module1show-gameglitchinvestigator-starter
+rootdir: ../ai110-module1show-gameglitchinvestigator-starter
 configfile: pytest.ini
 testpaths: tests
 collected 8 items
