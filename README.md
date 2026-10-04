@@ -25,28 +25,45 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+**Game purpose:** A number guessing game built with Streamlit. The player picks a difficulty (Easy 1-20 with 6 attempts, Normal 1-100 with 8, Hard 1-50 with 5), guesses the secret number, and gets a Higher/Lower hint after each guess. Score starts at 100 and drops by 10 with every wrong guess.
+
+**Bugs found:**
+- Hints were backwards (a guess below the secret said "Go LOWER!").
+- "Attempts left" showed 7 instead of 8 before any guess.
+- The score in Developer Debug Info differed from the final score in the win message. On even-numbered attempts the secret was converted to a string before comparing, so the outcome and score were wrong.
+- New Game reset the secret and attempts but not the game status, so guesses stayed blocked after a win.
+
+**Fixes applied:**
+- Hints now point toward the secret: "📉 Go LOWER!" for a high guess, "📈 Go HIGHER!" for a low guess.
+- Attempts start at 0 and increase by one per submitted guess.
+- The secret is always compared as an integer, and score starts at 100, loses 10 per wrong guess, and is kept on a win.
+- New Game now sets the status back to "playing".
+- Moved game logic (`check_guess`, `parse_guess`, `update_score`, `get_range_for_difficulty`) into `logic_utils.py` and added tests in `tests/test_game_logic.py`.
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
-
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. The game starts on Normal difficulty. The sidebar shows "Range: 1 to 100" and "Attempts allowed: 8". Instructions read Guess a number between 1 and 100. Attempts left: 8. Visible in the Developer Debug Info expander, Secret: 89, Attempts: 0, Score: 100, History: []
+2. The player enters 40 and clicks "Submit Guess 🚀". The game shows "📈 Go HIGHER!", attempts left drops to 7, and the score drops to 90.
+3. The player enters 90. The game shows "📉 Go LOWER!", attempts left drops to 6, and the score drops to 80.
+4. The player enters 89. The game shows "🎉 Correct!" and balloons, along with "You won! The secret was 89. Final score: 80".
+5. Any further submit shows "You already won. Start a new game to play again." until "New Game 🔁" is clicked.
+6. New Game button correctly resets with a new secret, 8 attempts left, Score: 100.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0
+rootdir: /Users/charitysturner/codepath/bytebites_tinker_activity/ai110-module1show-gameglitchinvestigator-starter
+configfile: pytest.ini
+testpaths: tests
+collected 8 items
+
+tests/test_game_logic.py ........                                        [100%]
+
+============================== 8 passed in 0.79s ===============================
 ```
 
 ## 🚀 Stretch Features
