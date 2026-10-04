@@ -38,9 +38,11 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
+    # FIX: Start at zero so submitted guesses are counted exactly once.
     st.session_state.attempts = 0
 
 if "score" not in st.session_state:
+    # FIX: Start each game with the full score.
     st.session_state.score = 100
 
 if "status" not in st.session_state:
@@ -99,6 +101,7 @@ if st.session_state.status != "playing":
     st.stop()
 
 if submit:
+    # FIX: Count every submitted guess toward the attempt limit.
     st.session_state.attempts += 1
 
     ok, guess_int, err = parse_guess(raw_guess)
@@ -114,6 +117,7 @@ if submit:
         if outcome == "Win":
             message = "🎉 Correct!"
         elif outcome == "Too High":
+            # FIX: Hint toward the direction that narrows in on the secret.
             message = "📉 Go LOWER!"
         else:
             message = "📈 Go HIGHER!"
@@ -121,6 +125,7 @@ if submit:
         if show_hint:
             st.warning(message)
 
+        # FIX: Incorrect guesses deduct points; a win retains the remaining score.
         st.session_state.score = update_score(
             current_score=st.session_state.score,
             outcome=outcome,

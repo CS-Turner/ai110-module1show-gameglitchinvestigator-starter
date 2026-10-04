@@ -9,6 +9,7 @@ def get_range_for_difficulty(difficulty: str):
     return 1, 100
 
 
+# FIX: Refactored guess parsing and comparison logic into logic_utils.py.
 def parse_guess(raw: str):
     """
     Parse user input into an int guess.
