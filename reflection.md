@@ -14,6 +14,7 @@ When I first ran the game, it showed instructions "Guess a number between 1 and 
 4. New Game doesn't reset the game status, so guesses stay blocked after a win.
 
 **Bug Reproduction Log**
+
 | Input | Expected Behavior | Actual Behavior | Console Output / Error | Suspected Code Location |
 |-------|-------------------|-----------------|------------------------|------------------------|
 | Guess 5 (Secret 52) | "Go HIGHER!" | "Go LOWER!" | none | check_guess() return messages, app.py |
@@ -45,7 +46,11 @@ When I first ran the game, it showed instructions "Guess a number between 1 and 
 
 ## 4. What did you learn about Streamlit and state?
 
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+**What a rerun is:** Every time a player interacts with the page, such as clicking Submit Guess or New Game, Streamlit runs the whole script from top to bottom.
+
+**What session state is:** Normal variables are rebuilt on every rerun, but values stored in `st.session_state` survive them. That is why the secret stays the same until the New Game button is clicked.
+
+**Where my bugs came from:** The score mismatch had two causes. One was a script-order problem: the Debug Info was drawn before the score was updated, so it showed the previous run's value and disagreed with the final score message. The other was a logic problem: on even-numbered attempts the secret was converted to a string before the comparison, so the outcome and score came out wrong. The New Game bug was a state problem: session state keeps its values across reruns, so nothing resets unless the code resets it, and New Game never set `status` back to `"playing"`.
 
 ---
 
