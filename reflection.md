@@ -5,35 +5,31 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ## 1. What was broken when you started?
 
 **First Impression:** 
-- What did the game look like the first time you ran it?
-When I first ran the game, it showed instructions "Guess a number between 1 and 100. Attempts left: 6", a Developer Debug Info dropdown, Enter your guess: field, and Submit Guess and New Game buttons. 
+When I first ran the game, it showed instructions "Guess a number between 1 and 100. Attempts left: 8", a Developer Debug Info dropdown, Enter your guess: field, and Submit Guess and New Game buttons.
 
-**Bugs noticed:**
-- List at least two concrete bugs you noticed at the start  
-  (for example: "the hints were backwards").
+**Bugs I noticed from the start:**
 1. Hints are backwards: a guess below the secret says "Go LOWER!"
-2. Attempts counter shows 7 instead of 8 before any guess.
+2. Attempts counter didn't go down after my first guess.
 3. Score in Debug Info differs from the score in the win message.
 4. New Game doesn't reset the game status, so guesses stay blocked after a win.
 
 **Bug Reproduction Log**
-
-Document at least 3 bugs you found. Add rows as needed.
-
 | Input | Expected Behavior | Actual Behavior | Console Output / Error | Suspected Code Location |
 |-------|-------------------|-----------------|------------------------|------------------------|
-| Guess 5 (Secret 52) | "Go HIGHER!" | "Go LOWER!" | none | check_guess() return messages, app.py lines 38, 40 |
-| Started the game, made no guess (Attempts allowed: 8) | "Attempts left: 8" | "Attempts left: 7" | none | st.info() , app.py lines 109-112 |
-| Guess 6 (Secret 6), win | Developer Debug Info score matches the on-screen final score | On-screen message says "Final score: 55"; Debug Info says "Score: -5" | none | update_score() (app.py lines 50-65), and the debug panel's read of st.session_state.score |
-| Won the game, clicked new game, then submitted a guess | Accepts new guesses. | Secret and attempts reset in Debug Info, but the guess it still blocked with message "You already won. Start a new game to play again." | none | never sets new status to playing, app.py lines 134-138 |
+| Guess 5 (Secret 52) | "Go HIGHER!" | "Go LOWER!" | none | check_guess() return messages, app.py |
+| Started the game (Attempts allowed: 8), then made one guess | "Attempts left: 7" after the first guess | "Attempts left: 8" (no change after the first guess) | none | attempts counter initialization and increment, app.py |
+| Guess 6 (Secret 6), win | Developer Debug Info score matches the on-screen final score | On-screen message says "Final score: 55"; Debug Info says "Score: -5" | none | update_score() (app.py), and the debug panel's read of st.session_state.score |
+| Won the game, clicked new game, then submitted a guess | Accepts new guesses. | Secret and attempts reset in Debug Info, but the guess was still blocked with message "You already won. Start a new game to play again." | none | New Game button never sets new status to playing, app.py |
 
 ---
 
 ## 2. How did you use AI as a teammate?
 
-- Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)? I used copilot in chat, and claude chats in a project. 
-- Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result). Noting that the "Go Higher! and "Go lower!" messages were backward let me condense the list of bugs noticed. 
-- Give one example of an AI suggestion you did not accept as written (including what the AI suggested, why you rejected or changed it, and how you verified your version). It does not have to be a suggestion that was wrong: over-engineered, out of scope, harder to read, or a poor fit for this codebase all count. Copilot noticed that the mismatch bug is script-order problem, not a random state corruption bug. On probing, I realized the issue was with updating the score in the Debug Info: on even attempts, the secret is converted to a string before comparing. So the score is not updated properly. The worked with Copilot in multistep prompting to address and fix the issue. Finally, I verified the fissue and fixed it by starting a new game and testing.
+**AI tools I used on this project:** I used GitHub Copilot in VS Code chat to diagnose bugs and make code changes, and Claude chats in a project to talk through the steps and documentation.
+
+**One AI suggestion that I accepted as correct:** When the Debug Info score didn't match the final score in the win message, Copilot pointed out that this was a script-order problem, not random state corruption. I probed further and found the real cause: on even-numbered attempts, the secret was converted to a string before the comparison, so the outcome and score came out wrong. Copilot's diagnosis was correct, and I verified it by starting a new game, guessing on both odd and even attempts, and confirming the Debug Info score and the win message matched.
+
+**Suggestion I did not accept as written:** Copilot's first fix reported the score after applying the current attempt's deduction, so a first-try win showed 90 instead of 100. I restored the checkpoint because that didn't match how scoring should work, and told the assistant the rule I wanted: the score is 100 at the start, drops 10 for each incorrect guess, and stays unchanged on a correct guess. Copilot then reworked `update_score()` into a remaining-score model. I verified it by playing games won on the 1st, 2nd, 3rd, 4th, and 8th attempts, where a win on attempt 3 shows 100 → 90 → 80 → 80 and the Debug Info score matches the win message. I also added pytest cases for `update_score()`, such as 100 with a Win staying 100 and 100 with Too Low becoming 90.
 
 ---
 
