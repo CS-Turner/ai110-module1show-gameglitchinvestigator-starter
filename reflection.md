@@ -35,10 +35,11 @@ When I first ran the game, it showed instructions "Guess a number between 1 and 
 
 ## 3. Debugging and testing your fixes
 
-- How did you decide whether a bug was really fixed?
-- Describe at least one test you ran (manual or using pytest)  
-  and what it showed you about your code.
-- Did AI help you design or understand any tests? How?
+**How I decided a bug was really fixed:** After each fix I restarted the app, since a new game generates a new secret, and replayed the inputs from my reproduction log to compare against the expected behavior. I guessed above and below the secret to check the hints, confirmed attempts left dropped by one per guess, and clicked New Game after a win to confirm my next guess was accepted. For the score, I played games won on the 1st, 2nd, 3rd, 4th, and 8th attempts and checked that the Debug Info score matched the win message.
+
+**One test I ran and what it showed:** My `tests/test_game_logic.py` checks `check_guess()` for a win, too high, and too low, and checks `update_score()` at several points in a game (for example, a win at 100 keeps the score, and a wrong guess at 90 drops it to 80). The most useful test was `test_score_and_attempts_update_for_each_guess`. Because the real secret is random, the test uses Streamlit's `AppTest` to run the app in memory and fix the secret at 50, so it can guess 60 and then 50 and check attempts and score after each guess. It mattered because my earlier score tests passed while the app still showed the wrong score, which showed me that testing a single function wasn't enough to catch a bug in how the app flows from guess to guess.
+
+**How AI helped me understand tests:** When the score tests passed but the app was still wrong, I asked Copilot to rewrite the tests to cover more score cases (a win keeping the score, wrong guesses dropping it by 10) instead of only the case I had been checking. When plain `pytest` failed with `ModuleNotFoundError: No module named 'logic_utils'` while `python -m pytest` worked, I used a Claude chat to understand why. I added a `pytest.ini` with `pythonpath = .`, and all 8 tests passed. I learned that pytest needs to be told where to find my modules.
 
 ---
 
