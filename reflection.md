@@ -56,8 +56,8 @@ When I first ran the game, it showed instructions "Guess a number between 1 and 
 
 ## 5. Looking ahead: your developer habits
 
-**A habit I want to reuse:** Documenting as I go. My prompting strategy worked well, but I got carried away implementing changes before writing down the problem and the fix. Next time I'll write the reproduction row first, then fix the bug, then commit, so each bug gets its own commit and the history tells the evolution.
+**A habit I want to reuse:** Documenting as I go. My prompting strategy worked well, but I got carried away implementing changes before writing down the problem and the fix. Next time I'll write the reproduction row first, then fix the bug, then commit, so each bug gets its own commit and the history tells the story of how the code evolved.
 
 **What I would do differently with AI:** I would stick with one assistant at a time. I used Copilot for the code changes and Claude chats for planning and documentation, and some feedback and fixes were lost in translation between them.
 
-**How this changed my thinking about AI-generated code:** Your honest answer, 1 to 2 sentences. For example: AI-generated code can look finished and still be wrong, since the starter shipped with four bugs. Good diagnosis still requires validation, like when I rejected Copilot's first scoring fix because it didn't follow the rule I had intended.
+**How this changed my thinking about AI-generated code:** AI-generated code can look finished and still be wrong, since the starter shipped with four bugs. Even good AI diagnoses need validation, like when I rejected Copilot's first scoring fix because it didn't follow the rule I intended.
